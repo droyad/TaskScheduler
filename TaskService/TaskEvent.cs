@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NETSTANDARD
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using JetBrains.Annotations;
@@ -853,3 +854,4 @@ namespace Microsoft.Win32.TaskScheduler
 		internal EventLogQuery Query { get; private set; }
 	}
 }
+#endif

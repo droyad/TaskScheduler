@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NETSTANDARD
+using System;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Diagnostics.Eventing.Reader;
@@ -722,3 +723,4 @@ namespace Microsoft.Win32.TaskScheduler
 	}
 #endif
 }
+#endif

@@ -38,9 +38,14 @@ namespace Microsoft.Win32.TaskScheduler
 	{
 		internal static readonly bool LibraryIsV2 = Environment.OSVersion.Version.Major >= 6;
 		private static readonly Version v1Ver = new Version(1, 1);
-		private static Guid CLSID_Ctask = Marshal.GenerateGuidForType(typeof(V1Interop.CTask));
+#if NETSTANDARD
+        private static Guid CLSID_Ctask = typeof(V1Interop.CTask).GUID;
+		private static Guid IID_ITask = typeof(V1Interop.ITask).GUID;
+#else
+        private static Guid CLSID_Ctask = Marshal.GenerateGuidForType(typeof(V1Interop.CTask));
 		private static Guid IID_ITask = Marshal.GenerateGuidForType(typeof(V1Interop.ITask));
-		private static Version osLibVer;
+#endif
+        private static Version osLibVer;
 		internal static readonly Guid PowerShellActionGuid = new Guid("dab4c1e3-cd12-46f1-96fc-3981143c9bab");
 
 		private static TaskService instance;
@@ -450,22 +455,24 @@ namespace Microsoft.Win32.TaskScheduler
 			return null;
 		}
 
-		/// <summary>
-		/// Gets the event log for this <see cref="TaskService"/> instance.
-		/// </summary>
-		/// <param name="taskPath">(Optional) The task path if only the events for a single task are desired.</param>
-		/// <returns>A <see cref="TaskEventLog"/> instance.</returns>
-		public TaskEventLog GetEventLog(string taskPath = null) => new TaskEventLog(TargetServer, taskPath, UserAccountDomain, UserName, UserPassword);
+#if !NETSTANDARD
+        /// <summary>
+        /// Gets the event log for this <see cref="TaskService"/> instance.
+        /// </summary>
+        /// <param name="taskPath">(Optional) The task path if only the events for a single task are desired.</param>
+        /// <returns>A <see cref="TaskEventLog"/> instance.</returns>
+        public TaskEventLog GetEventLog(string taskPath = null) => new TaskEventLog(TargetServer, taskPath, UserAccountDomain, UserName, UserPassword);
+#endif
 
-		/// <summary>Gets the path to a folder of registered tasks.</summary>
-		/// <param name="folderName">
-		/// The path to the folder to retrieve. Do not use a backslash following the last folder name in the path. The root task folder is specified with a
-		/// backslash (\). An example of a task folder path, under the root task folder, is \MyTaskFolder. The '.' character cannot be used to specify the
-		/// current task folder and the '..' characters cannot be used to specify the parent task folder in the path.
-		/// </param>
-		/// <returns><see cref="TaskFolder"/> instance for the requested folder or <c>null</c> if <paramref name="folderName"/> was unrecognized.</returns>
-		/// <exception cref="NotV1SupportedException">Folder other than the root (\) was requested on a system not supporting Task Scheduler 2.0.</exception>
-		public TaskFolder GetFolder(string folderName)
+        /// <summary>Gets the path to a folder of registered tasks.</summary>
+        /// <param name="folderName">
+        /// The path to the folder to retrieve. Do not use a backslash following the last folder name in the path. The root task folder is specified with a
+        /// backslash (\). An example of a task folder path, under the root task folder, is \MyTaskFolder. The '.' character cannot be used to specify the
+        /// current task folder and the '..' characters cannot be used to specify the parent task folder in the path.
+        /// </param>
+        /// <returns><see cref="TaskFolder"/> instance for the requested folder or <c>null</c> if <paramref name="folderName"/> was unrecognized.</returns>
+        /// <exception cref="NotV1SupportedException">Folder other than the root (\) was requested on a system not supporting Task Scheduler 2.0.</exception>
+        public TaskFolder GetFolder(string folderName)
 		{
 			TaskFolder f = null;
 			if (v2TaskService != null)
