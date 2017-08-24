@@ -1074,12 +1074,13 @@ namespace Microsoft.Win32.TaskScheduler
 			throw new NotV1SupportedException();
 		}
 
-		/// <summary>
-		/// Gets the last registration time, looking first at the <see cref="TaskRegistrationInfo.Date"/> value and
-		/// then looking for the most recent registration event in the Event Log.
-		/// </summary>
-		/// <returns><see cref="DateTime"/> of the last registration or <see cref="DateTime.MinValue"/> if no value can be found.</returns>
-		public DateTime GetLastRegistrationTime()
+#if !NETSTANDARD
+        /// <summary>
+        /// Gets the last registration time, looking first at the <see cref="TaskRegistrationInfo.Date"/> value and
+        /// then looking for the most recent registration event in the Event Log.
+        /// </summary>
+        /// <returns><see cref="DateTime"/> of the last registration or <see cref="DateTime.MinValue"/> if no value can be found.</returns>
+        public DateTime GetLastRegistrationTime()
 		{
 			var ret = Definition.RegistrationInfo.Date;
 			if (ret == DateTime.MinValue)
@@ -1096,6 +1097,7 @@ namespace Microsoft.Win32.TaskScheduler
 			}
 			return ret;
 		}
+#endif
 
 		/// <summary>
 		/// Gets the times that the registered task is scheduled to run during a specified time.

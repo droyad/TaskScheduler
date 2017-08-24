@@ -1,7 +1,7 @@
 ﻿#if NETSTANDARD
 using System;
 
-namespace Microsoft.Win32.TaskScheduler.Native
+namespace System.Runtime.InteropServices
 {
     public class TypeLibFuncAttribute : Attribute
     {

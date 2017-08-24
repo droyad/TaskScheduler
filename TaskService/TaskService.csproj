@@ -34,7 +34,8 @@
   <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETStandard' ">
     <PackageReference Include="JetBrains.Annotations" Version="11.0.0" />
     <PackageReference Include="System.Security.AccessControl" Version="4.4.0" />
-    <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.InteropServices.WindowsRuntime" Version="4.3.0" />
+    <PackageReference Include="Microsoft.Win32.Registry" Version="4.4.0" />
   </ItemGroup>
 
   <ItemGroup>

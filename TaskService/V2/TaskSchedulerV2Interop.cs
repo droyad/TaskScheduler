@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using JetBrains.Annotations;
-using Microsoft.Win32.TaskScheduler.Native;
 
 namespace Microsoft.Win32.TaskScheduler.V2Interop
 {

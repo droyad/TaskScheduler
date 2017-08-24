@@ -13,8 +13,10 @@ namespace Microsoft.Win32
 	/// </summary>
 	internal class WindowsImpersonatedIdentity : IDisposable, IIdentity
 	{
+#if !NETSTANDARD
 		private WindowsImpersonationContext impersonationContext = null;
-		private WindowsIdentity identity = null;
+#endif
+        private WindowsIdentity identity = null;
 
 		/// <summary>
 		/// Constructor. Starts the impersonation with the given credentials.
@@ -33,23 +35,30 @@ namespace Microsoft.Win32
 			}
 			else
 			{
-				if (NativeMethods.LogonUser(userName, domainName, password, LOGON_TYPE_NEW_CREDENTIALS, LOGON32_PROVIDER_DEFAULT, out token) != 0)
+#if NETSTANDARD
+                throw new NotSupportedException("Impersonation is not supported on .NET Core");
+#else
+                if (NativeMethods.LogonUser(userName, domainName, password, LOGON_TYPE_NEW_CREDENTIALS, LOGON32_PROVIDER_DEFAULT, out token) != 0)
 				{
-					identity = new WindowsIdentity(token.DangerousGetHandle());
-					impersonationContext = identity.Impersonate();
+                    identity = new WindowsIdentity(token.DangerousGetHandle());
+                    impersonationContext = identity.Impersonate();
 				}
 				else
 				{
 					throw new Win32Exception(Marshal.GetLastWin32Error());
 				}
-			}
-		}
+#endif
+
+            }
+        }
 
 		public void Dispose()
 		{
+#if !NETSTANDARD
 			if (impersonationContext != null)
 				impersonationContext.Undo();
-			if (identity != null)
+#endif
+            if (identity != null)
 				identity.Dispose();
 		}
 
